@@ -1,5 +1,5 @@
 import {
-  Body,
+  // Body,
   Controller,
   Get,
   // HttpException,
@@ -8,7 +8,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthPayloadDto } from './dto/auth.dto';
+// import { AuthPayloadDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 // import { AuthGuard } from '@nestjs/passport';
 import { LocalGuard } from './guards/local.guard';
@@ -21,14 +21,8 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalGuard)
-  login(@Body() authPayload: AuthPayloadDto) {
-    const user = this.authService.validateUser(authPayload);
-
-    //  no need, since it's handled by AuthGuard / local strategy
-    // if (!user)
-    //   return new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
-
-    return user; //  returns JWT
+  login(@Req() req: Request) {
+    return req.user; //  returns JWT
   }
 
   //  old implementation
@@ -48,5 +42,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   status(@Req() req: Request) {
     console.log('Inside AuthController status method, req.user: ', req.user);
+    return req.user;
   }
 }
